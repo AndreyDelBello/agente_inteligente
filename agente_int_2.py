@@ -1,9 +1,7 @@
 import random
+import matplotlib.pyplot as plt
 
 def calcular_tempo_total(caminho, matriz_distancias, cidades):
-    """
-    Calcula o tempo total de viagem ao longo de um caminho dado a matriz de distâncias.
-    """
     tempo_total = 0
     for i in range(len(caminho) - 1):
         cidade_atual = caminho[i]
@@ -16,17 +14,11 @@ def calcular_tempo_total(caminho, matriz_distancias, cidades):
     return tempo_total
 
 def gerar_caminho_aleatorio(cidades):
-    """
-    Gera um caminho aleatório entre as cidades.
-    """
     caminho = list(cidades)
     random.shuffle(caminho)
     return caminho
 
 def hill_climbing_manutencao(matriz_distancias, cidades, num_iteracoes):
-    """
-    Aplica o algoritmo de Hill Climbing para otimizar a rota dos técnicos de manutenção.
-    """
     melhor_caminho = gerar_caminho_aleatorio(cidades)
     melhor_tempo_total = calcular_tempo_total(melhor_caminho, matriz_distancias, cidades)
 
@@ -41,6 +33,26 @@ def hill_climbing_manutencao(matriz_distancias, cidades, num_iteracoes):
             melhor_tempo_total = novo_tempo_total
 
     return melhor_caminho, melhor_tempo_total
+
+def plotar_caminho(matriz_distancias, melhor_caminho, cidades):
+    # Criar listas de coordenadas para plotagem
+    coordenadas_x = [i for i, _ in enumerate(melhor_caminho)]
+    coordenadas_y = [cidades.index(cidade) for cidade in melhor_caminho]
+
+    # Adicionar a primeira cidade no final para fechar o ciclo
+    coordenadas_x.append(coordenadas_x[0])
+    coordenadas_y.append(coordenadas_y[0])
+
+    # Plotar o gráfico
+    plt.plot(coordenadas_x, coordenadas_y, marker='o')
+    plt.title('Caminho Otimizado para Técnicos de Manutenção')
+    plt.xlabel('Índices das Cidades')
+    plt.ylabel('Cidades')
+    
+    # Definir rótulos dos ticks apenas para as cidades
+    plt.xticks(coordenadas_x[:-1], melhor_caminho)
+    
+    plt.show()
 
 if __name__ == "__main__":
     # Matriz de Distâncias (tempo de viagem entre locais, em minutos)
@@ -64,3 +76,5 @@ if __name__ == "__main__":
     print("Melhor Caminho para Técnicos de Manutenção:", melhor_caminho)
     print("Melhor Tempo Total de Viagem:", melhor_tempo_total, "minutos")
 
+    # Plotar o caminho otimizado
+    plotar_caminho(matriz_distancias, melhor_caminho, cidades)
